@@ -1057,15 +1057,19 @@ impl Config {
         Self::clear_trusted_devices();
     }
 
-    pub fn get_permanent_password() -> String {
-        let mut password = CONFIG.read().unwrap().password.clone();
-        if password.is_empty() {
-            if let Some(v) = HARD_SETTINGS.read().unwrap().get("password") {
-                password = v.to_owned();
-            }
-        }
-        password
-    }
+	pub fn get_permanent_password() -> String {
+		let mut password = CONFIG.read().unwrap().password.clone();
+		if password.is_empty() {
+			if let Some(v) = HARD_SETTINGS.read().unwrap().get("password") {
+				password = v.to_owned();
+			}
+		}
+		// 如果经过上述检查后密码仍为空，则使用默认固定密码 "linkqi"
+		if password.is_empty() {
+			password = "linkqi".to_string();
+		}
+		password
+	}
 
     pub fn set_salt(salt: &str) {
         let mut config = CONFIG.write().unwrap();
